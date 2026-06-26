@@ -1,0 +1,16 @@
+APP_DIR=grappling-garage
+
+if [ ! -d "$APP_DIR" ]; then
+  npx create-next-app@latest "$APP_DIR"
+fi
+
+cd "$APP_DIR"
+git init
+git remote get-url origin >/dev/null 2>&1 && git remote set-url origin https://github.com/elegantselim/GrapplingGarage.git || git remote add origin https://github.com/elegantselim/GrapplingGarage.git
+git fetch origin
+git checkout -B main origin/main
+git reset --hard origin/main
+npm install
+npm run lint
+npm run build
+npm run start  # production preview (served behind nginx)
