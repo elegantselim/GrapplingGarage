@@ -28,13 +28,14 @@ function requireText(name, value, expected) {
   }
 }
 
-const [index, employee, robots, sitemap, llms, rules] = await Promise.all([
+const [index, employee, robots, sitemap, llms, rules, htaccess] = await Promise.all([
   read("out/index.html"),
   read("out/espace-employe/index.html"),
   read("out/robots.txt"),
   read("out/sitemap.xml"),
   read("out/llms.txt"),
   read("firestore.rules"),
+  read("out/.htaccess"),
 ]);
 
 requireText("Homepage canonical URL is missing or wrong", index, `<link rel="canonical" href="${expectedDomain}/"`);
@@ -53,6 +54,14 @@ requireMatch("llms.txt is missing its H1 title", llms, /^# Grappling Garage\s*$/
 requireMatch("llms.txt is missing its blockquote summary", llms, /^> \S.+$/m);
 requireMatch("llms.txt is missing canonical Markdown resource links", llms, /^- \[[^\]]+\]\(https:\/\/grapplinggarage\.tn\/[^​)]*\): .+$/m);
 requireMatch("Firestore schedule validation is missing", rules, /allow create, update: if validSchedule\(\);/);
+requireText("HTTPS redirect is missing from .htaccess", htaccess, "RewriteCond %{HTTPS} !=on");
+requireText("HSTS is missing from .htaccess", htaccess, "Strict-Transport-Security");
+requireText("Content Security Policy is missing from .htaccess", htaccess, "Content-Security-Policy");
+requireText("CSP does not upgrade insecure requests", htaccess, "upgrade-insecure-requests");
+
+if (/\b(?:src|href)=["']http:\/\//i.test(index) || /\bws:\/\//i.test(index)) {
+  failures.push("Homepage export contains an insecure resource URL");
+}
 
 if (index.includes("grappling-garage.tn") || robots.includes("grappling-garage.tn") || sitemap.includes("grappling-garage.tn")) {
   failures.push("Export still contains the invalid hyphenated domain");
