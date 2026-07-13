@@ -1,17 +1,8 @@
 # GrapplingGarage
 
-Grappling Garage website for a Tunis-based grappling, wrestling, BJJ, no-gi, fitness, and kids training club.
+Static Next.js website for Grappling Garage in Tunis.
 
-## Features
-
-- Mobile-first landing page
-- French, Arabic, and English content switcher
-- Read-only public class schedule
-- Separate employee schedule editor at `/espace-employe`
-- Local SEO for Tunis and Hay Rafaha
-- Structured data, sitemap, robots, Open Graph image, Twitter image, and `llms.txt`
-
-## Development
+## Local development
 
 ```bash
 npm install
@@ -20,11 +11,30 @@ npm run dev
 
 Open `http://127.0.0.1:3000`.
 
-## Production
-
-Set `NEXT_PUBLIC_SITE_URL` to the deployed domain before building or deploying.
+## Production build
 
 ```bash
+npm install
+npm run lint
 npm run build
-npm run start
 ```
+
+The build creates the complete static website in `out/` and verifies the
+production domain, Google meta tag, canonical URL, robots, sitemap, employee
+noindex, Plesk fallback, Firestore rules, and llms.txt 3/3 structure.
+
+Copy the contents of `out/` directly into the Plesk document root. The website
+does not require Node.js on Plesk.
+
+The employee page uses PIN `1111`, then edits the public `schedules` collection
+directly with the Firebase SDK. Deploy `firestore.rules` once so schedule fields
+remain validated:
+
+```bash
+npx firebase-tools@latest login
+npx firebase-tools@latest use grapplinggarage
+npx firebase-tools@latest deploy --only firestore:rules
+```
+
+The remaining Plesk certificate and Topnet DNS actions are listed precisely in
+`deploy/PRODUCTION-CHECKLIST.md`.

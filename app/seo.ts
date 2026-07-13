@@ -1,6 +1,12 @@
-export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://grappling-garage.tn"
-).replace(/\/$/, "");
+const configuredSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://grapplinggarage.tn";
+const parsedSiteUrl = new URL(configuredSiteUrl);
+
+if (process.env.NODE_ENV === "production" && parsedSiteUrl.protocol !== "https:") {
+  throw new Error("NEXT_PUBLIC_SITE_URL must use HTTPS for production builds.");
+}
+
+export const siteUrl = parsedSiteUrl.toString().replace(/\/$/, "");
 
 export const businessName = "Grappling Garage";
 export const phoneDisplay = "+216 54 032 697";
@@ -16,7 +22,7 @@ export const address = {
 };
 
 export const seoDescription =
-  "Grappling Garage à Tunis aide débutants, adultes et enfants à apprendre le wrestling, le Brazilian Jiu-Jitsu, le no-gi grappling et le fitness dans un cadre clair, humain et motivant.";
+  "Club de BJJ, grappling et wrestling à Hay Rafaha, Tunis. Cours de jiu-jitsu brésilien et lutte pour adultes, débutants et enfants de 5 à 15 ans.";
 
 export const services = [
   "Wrestling à Tunis",
@@ -25,4 +31,7 @@ export const services = [
   "Fitness grappling à Tunis",
   "Cours enfants à Tunis",
   "Cours adultes débutants à Tunis",
+  "Club de grappling à Tunis",
+  "Club de BJJ à Tunis",
+  "Cours de lutte à Tunis",
 ];

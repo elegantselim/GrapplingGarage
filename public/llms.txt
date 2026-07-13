@@ -2,12 +2,18 @@
 
 > Grappling Garage is a grappling, wrestling, Brazilian Jiu-Jitsu, no-gi and fitness club in Tunis, Tunisia. The club helps beginners, adults, and children start training with a calm, encouraging, practical approach focused on confidence, useful self-defense, fitness, and sustainable progress.
 
+## Website
+
+- [Official Grappling Garage website](https://grapplinggarage.tn/): Club information, disciplines, beginner guidance, and contact details.
+- [Weekly class schedule](https://grapplinggarage.tn/#agenda): Current Jiu-jitsu, wrestling, and children class times.
+- [Club address](https://grapplinggarage.tn/#adresses): Grappling Garage location in Hay Rafaha, Tunis.
+
 ## Primary Information
 
 - Name: Grappling Garage
 - Address: Rue Abdallah Farhat, Hay Rafaha, Tunis, Tunisie
 - Phone: +216 54 032 697
-- WhatsApp: https://wa.me/21654032697
+- WhatsApp: [Contact Grappling Garage](https://wa.me/21654032697)
 - Main language: French
 - Other visible languages: Arabic, English
 - Service area: Tunis, Tunisia

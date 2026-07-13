@@ -17,27 +17,34 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: businessName,
   title: {
-    default: "Grappling Garage Tunis | BJJ, Wrestling, Grappling et Fitness",
+    default: "Club BJJ et Grappling à Tunis | Grappling Garage",
     template: `%s | ${businessName}`,
   },
   description: seoDescription,
   keywords: [
     "grappling Tunis",
+    "club grappling Tunis",
     "BJJ Tunis",
+    "club BJJ Tunis",
+    "cours BJJ Tunis",
     "Brazilian Jiu-Jitsu Tunis",
+    "jiu-jitsu brésilien Tunis",
     "wrestling Tunis",
     "lutte Tunis",
-    "fitness Tunis",
-    "self defense Tunis",
-    "grappling kids Tunis",
+    "cours lutte Tunis",
+    "cours grappling enfants Tunis",
+    "BJJ enfants Tunis",
     "sport de combat Tunis",
     "Hay Rafaha",
   ],
   alternates: {
     canonical: "/",
   },
+  verification: {
+    google: "IarFT5-k_ad2kMlerxg38_GDOVTBoKa1EiZXrlCSZ_s",
+  },
   openGraph: {
-    title: "Grappling Garage Tunis | BJJ, Wrestling, Grappling et Fitness",
+    title: "Club BJJ et Grappling à Tunis | Grappling Garage",
     description: seoDescription,
     url: siteUrl,
     siteName: businessName,
@@ -47,7 +54,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Grappling Garage Tunis | BJJ, Wrestling et Fitness",
+    title: "Club BJJ et Grappling à Tunis | Grappling Garage",
     description: seoDescription,
   },
   robots: {

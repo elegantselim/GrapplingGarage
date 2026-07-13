@@ -1,11 +1,17 @@
-npx create-next-app@latest grapplinggarage
+# Initialize this project from the existing GitHub repository.
+mkdir -p grapplinggarage
 cd grapplinggarage
 git init
 git remote add origin https://github.com/elegantselim/GrapplingGarage.git
 git fetch
-git checkout main
+git checkout -B main origin/main
 git reset --hard origin/main
 npm install
 npm run lint
-npm run build
-npm run start  # production preview (served behind nginx)
+npm run build  # static deployment bundle in out/
+
+# One-time production setup (requires authorized Firebase and provider access):
+# npx firebase-tools@latest login
+# npx firebase-tools@latest use grapplinggarage
+# npx firebase-tools@latest deploy --only firestore:rules
+# Follow deploy/PRODUCTION-CHECKLIST.md for Plesk TLS and Topnet DNS.
