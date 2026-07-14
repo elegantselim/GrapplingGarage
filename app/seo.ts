@@ -27,8 +27,20 @@ const mapsDestination =
 
 export const mapsHref = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapsDestination)}&travelmode=driving`;
 
-export const seoDescription =
-  "Club de BJJ, grappling et wrestling à Hay Rafaha, Tunis. Cours de jiu-jitsu brésilien et lutte pour adultes, débutants et enfants de 5 à 15 ans.";
+export const seoDescriptions = {
+  fr: "Club de BJJ, grappling et wrestling à Hay Rafaha, Tunis. Cours de jiu-jitsu brésilien et lutte pour adultes, débutants et enfants de 5 à 15 ans.",
+  ar: "نادي جيوجيتسو برازيلي وغرابلينغ ومصارعة في حي الرفاهة، تونس. حصص للكبار والمبتدئين والأطفال من 5 إلى 15 سنة.",
+  en: "BJJ, grappling and wrestling club in Hay Rafaha, Tunis. Brazilian Jiu-Jitsu and wrestling classes for adults, beginners and children aged 5 to 15.",
+} as const;
+
+export const seoDescription = seoDescriptions.fr;
+
+export const languageAlternates = {
+  "fr-TN": `${siteUrl}/`,
+  "ar-TN": `${siteUrl}/ar/`,
+  en: `${siteUrl}/en/`,
+  "x-default": `${siteUrl}/`,
+};
 
 export const services = [
   "Wrestling à Tunis",

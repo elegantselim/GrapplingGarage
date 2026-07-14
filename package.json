@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/verify-production.mjs",
+    "build": "next build && node scripts/finalize-static-locales.mjs && node scripts/verify-production.mjs",
     "start": "next start",
     "lint": "eslint",
     "verify:production": "node scripts/verify-production.mjs"

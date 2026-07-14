@@ -5,6 +5,8 @@
 ## Website
 
 - [Official Grappling Garage website](https://grapplinggarage.tn/): Club information, disciplines, beginner guidance, and contact details.
+- [Arabic Grappling Garage website](https://grapplinggarage.tn/ar/): معلومات النادي والحصص والمواعيد باللغة العربية.
+- [English Grappling Garage website](https://grapplinggarage.tn/en/): Club information, classes, schedule, and contact details in English.
 - [Weekly class schedule](https://grapplinggarage.tn/#agenda): Current Jiu-jitsu, wrestling, and children class times.
 - [Club address](https://grapplinggarage.tn/#adresses): Grappling Garage location in Hay Rafaha, Tunis.
 
@@ -15,7 +17,7 @@
 - Phone: +216 54 032 697
 - WhatsApp: [Contact Grappling Garage](https://wa.me/21654032697)
 - Main language: French
-- Other visible languages: Arabic, English
+- Localized pages: French (`/`), Arabic (`/ar/`), English (`/en/`)
 - Service area: Tunis, Tunisia
 
 ## Services

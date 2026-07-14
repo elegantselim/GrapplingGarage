@@ -33,7 +33,72 @@ function parseSchedule(payload) {
     .filter(Boolean);
 }
 
-export function AgendaDisplay() {
+const dayLabels = {
+  fr: Object.fromEntries(days.map((day) => [day, day])),
+  en: {
+    Lundi: "Monday",
+    Mardi: "Tuesday",
+    Mercredi: "Wednesday",
+    Jeudi: "Thursday",
+    Vendredi: "Friday",
+    Samedi: "Saturday",
+    Dimanche: "Sunday",
+  },
+  ar: {
+    Lundi: "الاثنين",
+    Mardi: "الثلاثاء",
+    Mercredi: "الأربعاء",
+    Jeudi: "الخميس",
+    Vendredi: "الجمعة",
+    Samedi: "السبت",
+    Dimanche: "الأحد",
+  },
+};
+
+const classLabels = {
+  en: {
+    "Jiu-jitsu": "Brazilian Jiu-Jitsu",
+    Lutte: "Wrestling",
+    "Enfants 5 à 10 ans": "Kids aged 5 to 10",
+    "Enfants 10 à 15 ans": "Kids aged 10 to 15",
+  },
+  ar: {
+    "Jiu-jitsu": "جيوجيتسو برازيلية",
+    Lutte: "مصارعة",
+    "Enfants 5 à 10 ans": "أطفال من 5 إلى 10 سنوات",
+    "Enfants 10 à 15 ans": "أطفال من 10 إلى 15 سنة",
+  },
+};
+
+const categoryLabels = {
+  fr: { Enfants: "Enfants", Fitness: "Fitness", "Open mat": "Open mat", Lutte: "Lutte", "No-gi": "No-gi", "Jiu-jitsu": "Jiu-jitsu" },
+  en: { Enfants: "Kids", Fitness: "Fitness", "Open mat": "Open mat", Lutte: "Wrestling", "No-gi": "No-gi", "Jiu-jitsu": "BJJ" },
+  ar: { Enfants: "أطفال", Fitness: "لياقة", "Open mat": "تدريب مفتوح", Lutte: "مصارعة", "No-gi": "نو-غي", "Jiu-jitsu": "جيوجيتسو" },
+};
+
+const interfaceCopy = {
+  fr: {
+    error: "Agenda Firebase temporairement indisponible. Horaires habituels affichés.",
+    aria: (day) => `Cours du ${day}`,
+    count: (count) => `${count} cours`,
+  },
+  en: {
+    error: "The live schedule is temporarily unavailable. Usual class times are shown.",
+    aria: (day) => `${day} classes`,
+    count: (count) => `${count} ${count === 1 ? "class" : "classes"}`,
+  },
+  ar: {
+    error: "البرنامج المباشر غير متاح مؤقتا. نعرض المواعيد المعتادة.",
+    aria: (day) => `حصص يوم ${day}`,
+    count: (count) => `${count} حصص`,
+  },
+};
+
+function localizeClassName(className, locale) {
+  return classLabels[locale]?.[className] || className;
+}
+
+export function AgendaDisplay({ locale = "fr" }) {
   const [agenda, setAgenda] = useState(starterAgenda);
   const [error, setError] = useState(false);
 
@@ -72,22 +137,22 @@ export function AgendaDisplay() {
     <>
       {error && (
         <p className="mb-4 text-sm font-bold text-[#c8e4f2]" aria-live="polite">
-          Agenda Firebase temporairement indisponible. Horaires habituels affichés.
+          {interfaceCopy[locale].error}
         </p>
       )}
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {agendaByDay.map((group) => (
           <section
             key={group.day}
-            aria-label={`Cours du ${group.day}`}
+            aria-label={interfaceCopy[locale].aria(dayLabels[locale][group.day])}
             className="overflow-hidden rounded-lg bg-white text-[#061826] shadow-sm ring-1 ring-[#244a63]"
           >
             <div className="flex items-center justify-between gap-3 bg-[#dff5ff] px-4 py-3">
               <h3 className="text-lg font-black uppercase tracking-normal text-[#0b2d46]">
-                {group.day}
+                {dayLabels[locale][group.day]}
               </h3>
               <span className="rounded-full bg-white px-3 py-1 text-xs font-black uppercase text-[#0e7490]">
-                {group.sessions.length} cours
+                {interfaceCopy[locale].count(group.sessions.length)}
               </span>
             </div>
             <div className="divide-y divide-[#d7eaf5]">
@@ -98,9 +163,9 @@ export function AgendaDisplay() {
                   </time>
                   <div className="min-w-0">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <h4 className="text-base font-black leading-tight">{session.className}</h4>
+                      <h4 className="text-base font-black leading-tight">{localizeClassName(session.className, locale)}</h4>
                       <span className="w-fit rounded-full bg-[#0b2d46] px-3 py-1 text-[0.68rem] font-black uppercase text-white">
-                        {getCategory(session.className)}
+                        {categoryLabels[locale][getCategory(session.className)]}
                       </span>
                     </div>
                   </div>

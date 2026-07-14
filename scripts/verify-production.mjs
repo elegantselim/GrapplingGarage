@@ -28,8 +28,10 @@ function requireText(name, value, expected) {
   }
 }
 
-const [index, employee, robots, sitemap, llms, rules, htaccess] = await Promise.all([
+const [index, arabic, english, employee, robots, sitemap, llms, rules, htaccess] = await Promise.all([
   read("out/index.html"),
+  read("out/ar/index.html"),
+  read("out/en/index.html"),
   read("out/espace-employe/index.html"),
   read("out/robots.txt"),
   read("out/sitemap.xml"),
@@ -39,6 +41,33 @@ const [index, employee, robots, sitemap, llms, rules, htaccess] = await Promise.
 ]);
 
 requireText("Homepage canonical URL is missing or wrong", index, `<link rel="canonical" href="${expectedDomain}/"`);
+requireText("Arabic canonical URL is missing or wrong", arabic, `<link rel="canonical" href="${expectedDomain}/ar/"`);
+requireText("English canonical URL is missing or wrong", english, `<link rel="canonical" href="${expectedDomain}/en/"`);
+requireMatch("French page has the wrong document language", index, /<html lang="fr"/);
+requireMatch("Arabic page has the wrong document language or direction", arabic, /<html lang="ar" dir="rtl"/);
+requireMatch("English page has the wrong document language", english, /<html lang="en" dir="ltr"/);
+requireText("Arabic page is missing its localized H1", arabic, "نادي جيوجيتسو وغرابلينغ ومصارعة في تونس");
+requireText("English page is missing its localized H1", english, "BJJ, grappling and wrestling club in Tunis");
+requireText("Arabic page is missing its localized title", arabic, "نادي جيوجيتسو وغرابلينغ في تونس | Grappling Garage");
+requireText("English page is missing its localized title", english, "BJJ and Grappling Club in Tunis | Grappling Garage");
+requireText(
+  "Arabic page is missing its localized description",
+  arabic,
+  "نادي جيوجيتسو برازيلي وغرابلينغ ومصارعة في حي الرفاهة، تونس",
+);
+requireText(
+  "English page is missing its localized description",
+  english,
+  "BJJ, grappling and wrestling club in Hay Rafaha, Tunis",
+);
+
+for (const [name, page] of [["French", index], ["Arabic", arabic], ["English", english]]) {
+  requireMatch(`${name} page is not explicitly indexable`, page, /<meta name="robots" content="index, follow"/);
+  requireText(`${name} page is missing French hreflang`, page, `hrefLang="fr-TN" href="${expectedDomain}/"`);
+  requireText(`${name} page is missing Arabic hreflang`, page, `hrefLang="ar-TN" href="${expectedDomain}/ar/"`);
+  requireText(`${name} page is missing English hreflang`, page, `hrefLang="en" href="${expectedDomain}/en/"`);
+  requireText(`${name} page is missing x-default hreflang`, page, `hrefLang="x-default" href="${expectedDomain}/"`);
+}
 requireText(
   "Google verification meta tag is missing or wrong",
   index,
@@ -47,8 +76,15 @@ requireText(
 requireText("robots.txt has the wrong host", robots, `Host: ${expectedDomain}`);
 requireText("robots.txt has the wrong sitemap", robots, `Sitemap: ${expectedDomain}/sitemap.xml`);
 requireText("robots.txt does not exclude the employee page", robots, "Disallow: /espace-employe");
-requireText("sitemap.xml does not contain the canonical homepage", sitemap, `<loc>${expectedDomain}</loc>`);
-requireMatch("sitemap.xml must contain exactly one indexable URL", sitemap, /^((?!<url>).)*<url>((?!<url>).)*<\/url>((?!<url>).)*$/s);
+requireText("sitemap.xml does not contain the canonical homepage", sitemap, `<loc>${expectedDomain}/</loc>`);
+if ((sitemap.match(/<url>/g) || []).length !== 3) {
+  failures.push("sitemap.xml must contain exactly three localized URLs");
+}
+requireText("sitemap.xml is missing the Arabic URL", sitemap, `<loc>${expectedDomain}/ar/</loc>`);
+requireText("sitemap.xml is missing the English URL", sitemap, `<loc>${expectedDomain}/en/</loc>`);
+if ((sitemap.match(/<xhtml:link rel="alternate"/g) || []).length !== 12) {
+  failures.push("sitemap.xml must contain four reciprocal language alternates for each localized URL");
+}
 requireMatch("Employee page must be noindex", employee, /<meta name="robots" content="noindex, nofollow"/);
 requireMatch("llms.txt is missing its H1 title", llms, /^# Grappling Garage\s*$/m);
 requireMatch("llms.txt is missing its blockquote summary", llms, /^> \S.+$/m);
@@ -69,8 +105,8 @@ requireText(
   "https://www.google.com/maps/dir/?api=1&amp;destination=Grappling%20Garage%2C%20Hay%20Rafaha",
 );
 
-if (/\b(?:src|href)=["']http:\/\//i.test(index) || /\bws:\/\//i.test(index)) {
-  failures.push("Homepage export contains an insecure resource URL");
+if ([index, arabic, english].some((page) => /\b(?:src|href)=["']http:\/\//i.test(page) || /\bws:\/\//i.test(page))) {
+  failures.push("A localized homepage export contains an insecure resource URL");
 }
 
 if (index.includes("grappling-garage.tn") || robots.includes("grappling-garage.tn") || sitemap.includes("grappling-garage.tn")) {
