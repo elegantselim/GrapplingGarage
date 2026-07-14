@@ -159,6 +159,14 @@ const faqs = [
     question: copy("Quel cours choisir entre BJJ et lutte ?", "أي حصة أختار: الجيوجيتسو أم المصارعة؟", "Should I choose BJJ or wrestling?"),
     answer: copy("Écris-nous ton objectif. On te conseille le cours qui correspond à ton niveau et à ce que tu veux développer.", "أرسل لنا هدفك وسنقترح الحصة المناسبة لمستواك.", "Tell us your goal and we will recommend the class that fits your level."),
   },
+  {
+    question: copy("Proposez-vous des cours de MMA à Tunis ?", "هل تقدمون حصص الفنون القتالية المختلطة (MMA) في تونس؟", "Do you offer MMA classes in Tunis?"),
+    answer: copy(
+      "Non. Grappling Garage ne propose pas de cours de MMA. Nos cours de BJJ, grappling et lutte développent toutefois des bases essentielles utilisées en MMA : amenées au sol, contrôle, défense et travail au sol.",
+      "لا. لا يقدم Grappling Garage حصص MMA. لكن حصص الجيوجيتسو والغرابلينغ والمصارعة تبني أساسيات مهمة مستخدمة في MMA، مثل الإسقاطات والسيطرة والدفاع والعمل الأرضي.",
+      "No. Grappling Garage does not offer MMA classes. Our BJJ, grappling and wrestling classes do build essential foundations used in MMA, including takedowns, control, defense and ground work.",
+    ),
+  },
 ];
 
 const localizedServices: Record<Locale, string[]> = {

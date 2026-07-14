@@ -60,6 +60,14 @@ requireText(
   english,
   "BJJ, grappling and wrestling club in Hay Rafaha, Tunis",
 );
+requireText("French page is missing the honest MMA FAQ", index, "ne propose pas de cours de MMA");
+requireText("Arabic page is missing the honest MMA FAQ", arabic, "لا يقدم Grappling Garage حصص MMA");
+requireText("English page is missing the honest MMA FAQ", english, "does not offer MMA classes");
+requireText(
+  "llms.txt must clarify that MMA classes are not offered",
+  llms,
+  "Grappling Garage does not offer MMA classes",
+);
 
 for (const [name, page] of [["French", index], ["Arabic", arabic], ["English", english]]) {
   requireMatch(`${name} page is not explicitly indexable`, page, /<meta name="robots" content="index, follow"/);
