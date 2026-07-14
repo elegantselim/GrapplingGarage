@@ -4,6 +4,7 @@ import { BrandLogo } from "./brand-logo";
 import {
   address,
   businessName,
+  mapsHref,
   phoneDisplay,
   phoneE164,
   phoneHref,
@@ -170,7 +171,14 @@ const structuredData = {
       image: `${siteUrl}/opengraph-image.png`,
       telephone: phoneE164,
       description: seoDescription,
-      address: { "@type": "PostalAddress", ...address },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: address.streetAddress,
+        addressLocality: address.addressLocality,
+        postalCode: address.postalCode,
+        addressCountry: address.addressCountry,
+      },
+      hasMap: mapsHref,
       areaServed: ["Tunis", "Tunisie"],
       sport: ["Brazilian Jiu-Jitsu", "Grappling", "Wrestling"],
       knowsAbout: services,
@@ -468,7 +476,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white py-14 lg:py-20">
+      <section id="adresses" className="bg-white py-14 lg:py-20">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-2">
           <div className="copy-align border-l-4 border-[#d9ff45] pl-6">
             <p className="text-sm font-black uppercase text-[#08777a]"><T value={copy("Enfants 5 à 15 ans", "أطفال من 5 إلى 15 سنة", "Children aged 5 to 15")} /></p>
@@ -479,7 +487,7 @@ export default function Home() {
           <div className="copy-align border-l-4 border-[#08777a] pl-6">
             <p className="text-sm font-black uppercase text-[#08777a]"><T value={copy("Hay Rafaha, Tunis", "حي الرفاهة، تونس", "Hay Rafaha, Tunis")} /></p>
             <h2 className="mt-3 text-4xl font-black sm:text-5xl"><T block value={copy("Un vrai club. Une vraie équipe. À Tunis.", "ناد حقيقي. فريق حقيقي. في تونس.", "A real club. A real team. In Tunis.")} /></h2>
-            <p className="mt-5 font-semibold leading-7 text-[#385463]">{address.display}</p>
+            <a href={mapsHref} target="_blank" rel="noopener noreferrer" className="mt-5 block font-semibold leading-7 text-[#385463] underline decoration-[#d9ff45] decoration-4 underline-offset-4">{address.display}</a>
             <a href={phoneHref} className="mt-5 inline-block text-xl font-black underline decoration-[#d9ff45] decoration-4 underline-offset-4">{phoneDisplay}</a>
             <PhotoSlot number="19" label={copy("Le club à Hay Rafaha", "النادي في حي الرفاهة", "The club in Hay Rafaha")} className="mt-8 min-h-80" />
           </div>
@@ -518,12 +526,14 @@ export default function Home() {
 
       <div className="fixed bottom-6 right-6 z-50 hidden w-48 gap-2 sm:grid">
         <a href={trialWhatsappHref} className="flex h-12 items-center justify-center rounded-md bg-[#d9ff45] px-4 text-sm font-black uppercase text-[#071923] shadow-xl ring-1 ring-[#071923]/20">WhatsApp</a>
+        <a href={mapsHref} target="_blank" rel="noopener noreferrer" className="flex h-12 items-center justify-center rounded-md bg-[#08777a] px-4 text-sm font-black uppercase text-white shadow-xl ring-1 ring-[#071923]/20"><T value={copy("Itinéraire", "الاتجاهات", "Directions")} /></a>
         <a href={phoneHref} aria-label={`Appeler Grappling Garage au ${phoneDisplay}`} className="flex h-12 items-center justify-center rounded-md bg-white px-4 text-sm font-black uppercase text-[#071923] shadow-xl ring-1 ring-[#071923]/20">Appeler</a>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-px bg-[#071923] p-2 sm:hidden">
-        <a href={phoneHref} className="flex h-12 items-center justify-center bg-white text-sm font-black uppercase text-[#071923]">Appeler</a>
-        <a href={trialWhatsappHref} className="flex h-12 items-center justify-center bg-[#d9ff45] text-sm font-black uppercase text-[#071923]">WhatsApp</a>
+      <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 gap-px bg-[#071923] p-2 sm:hidden">
+        <a href={phoneHref} className="flex h-12 items-center justify-center bg-white px-1 text-xs font-black uppercase text-[#071923]"><T value={copy("Appeler", "اتصل", "Call")} /></a>
+        <a href={mapsHref} target="_blank" rel="noopener noreferrer" className="flex h-12 items-center justify-center bg-[#08777a] px-1 text-xs font-black uppercase text-white"><T value={copy("Itinéraire", "الاتجاهات", "Directions")} /></a>
+        <a href={trialWhatsappHref} className="flex h-12 items-center justify-center bg-[#d9ff45] px-1 text-xs font-black uppercase text-[#071923]">WhatsApp</a>
       </div>
     </main>
   );

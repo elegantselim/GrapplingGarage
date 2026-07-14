@@ -58,6 +58,16 @@ requireText("HTTPS redirect is missing from .htaccess", htaccess, "RewriteCond %
 requireText("HSTS is missing from .htaccess", htaccess, "Strict-Transport-Security");
 requireText("Content Security Policy is missing from .htaccess", htaccess, "Content-Security-Policy");
 requireText("CSP does not upgrade insecure requests", htaccess, "upgrade-insecure-requests");
+requireText(
+  "Exact Grappling Garage address is missing",
+  index,
+  "Hay Rafaha, Rue Abdallah, Rue Farhat Hached, Tunis 2094, Tunisie",
+);
+requireText(
+  "Google Maps directions link is missing",
+  index,
+  "https://www.google.com/maps/dir/?api=1&amp;destination=Grappling%20Garage%2C%20Hay%20Rafaha",
+);
 
 if (/\b(?:src|href)=["']http:\/\//i.test(index) || /\bws:\/\//i.test(index)) {
   failures.push("Homepage export contains an insecure resource URL");
