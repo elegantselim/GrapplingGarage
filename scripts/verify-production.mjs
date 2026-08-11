@@ -17,6 +17,20 @@ async function read(relativePath) {
   }
 }
 
+async function listFiles(directory, prefix = "") {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      files.push(...await listFiles(path.join(directory, entry.name), relativePath));
+    } else {
+      files.push(relativePath);
+    }
+  }
+  return files;
+}
+
 function requireMatch(name, value, pattern) {
   if (!pattern.test(value)) {
     failures.push(name);
@@ -176,12 +190,48 @@ try {
   }
   for (const file of mediaFiles) {
     const mediaStat = await stat(path.join(out, "media", file));
-    if (mediaStat.size > 100 * 1024) {
-      failures.push(`${file} exceeds the 100 KB media budget`);
+    if (mediaStat.size >= 30_000) {
+      failures.push(`${file} exceeds the strict sub-30 KB media budget`);
     }
   }
 } catch {
   failures.push("Responsive media directory is missing");
+}
+
+try {
+  const rasterFiles = (await listFiles(out)).filter((file) => /\.(?:avif|jpe?g|png|webp)$/i.test(file));
+  for (const file of rasterFiles) {
+    const rasterStat = await stat(path.join(out, file));
+    if (rasterStat.size >= 30_000) {
+      failures.push(`${file} exceeds the strict sub-30 KB deployable image budget`);
+    }
+  }
+} catch {
+  failures.push("Could not verify the complete deployable image budget");
+}
+
+try {
+  const mapsDirectory = path.join(root, "google maps");
+  const mapsFiles = (await readdir(mapsDirectory)).filter((file) => file.endsWith(".png"));
+  const expectedMapsFiles = [
+    "grappling-garage-tunis-takedown-training.png",
+    "grappling-garage-tunis-team-warmup.png",
+    "grappling-garage-tunis-wrestling-round.png",
+  ];
+  if (
+    mapsFiles.length !== expectedMapsFiles.length
+    || expectedMapsFiles.some((file) => !mapsFiles.includes(file))
+  ) {
+    failures.push("Google Maps folder must contain the three named lossless image masters");
+  }
+  for (const file of expectedMapsFiles) {
+    const mapsStat = await stat(path.join(mapsDirectory, file));
+    if (mapsStat.size < 1_000_000) {
+      failures.push(`${file} is not the preserved high-quality Google Maps master`);
+    }
+  }
+} catch {
+  failures.push("Google Maps high-quality image folder is missing");
 }
 
 if ([index, arabic, english].some((page) => /\b(?:src|href)=["']http:\/\//i.test(page) || /\bws:\/\//i.test(page))) {
