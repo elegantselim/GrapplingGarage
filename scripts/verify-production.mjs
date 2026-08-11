@@ -1,4 +1,5 @@
 import { readFile, readdir, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 
 const root = process.cwd();
@@ -123,15 +124,55 @@ requireText("First-viewport media priority is missing", index, 'fetchPriority="h
 requireText("Below-the-fold media lazy loading is missing", index, 'loading="lazy"');
 
 for (const [name, page] of [["French", index], ["Arabic", arabic], ["English", english]]) {
-  if ((page.match(/<picture>/g) || []).length !== 21) {
-    failures.push(`${name} page must contain exactly 21 relevant responsive pictures`);
+  const pictures = page.match(/<picture>/g) || [];
+  const imageTags = page.match(/<img[^>]+src="\/media\/[^>]+>/g) || [];
+  const mediaSources = [...page.matchAll(/<img[^>]+src="\/media\/([^\"]+)"/g)]
+    .map((match) => match[1].replace(/-\d+\.webp$/, ""));
+  const referencedVariants = new Set(
+    [...page.matchAll(/\/media\/([a-z0-9-]+\.(?:avif|webp))/g)].map((match) => match[1]),
+  );
+
+  if (pictures.length !== 14) {
+    failures.push(`${name} page must contain exactly 14 relevant responsive pictures`);
+  }
+  if (mediaSources.length !== 14 || new Set(mediaSources).size !== mediaSources.length) {
+    failures.push(`${name} page must use a distinct media source for every picture`);
+  }
+  if (imageTags.length !== 14 || imageTags.some((tag) => !/alt="[^"]+"/.test(tag))) {
+    failures.push(`${name} page must provide localized alt text for every content image`);
+  }
+  if (imageTags.some((tag) => !/width="\d+" height="\d+"/.test(tag))) {
+    failures.push(`${name} page must reserve intrinsic dimensions for every content image`);
+  }
+  if (imageTags.filter((tag) => tag.includes('fetchPriority="high"')).length !== 2) {
+    failures.push(`${name} page must prioritize exactly two first-viewport images`);
+  }
+  if (imageTags.filter((tag) => tag.includes('loading="lazy"')).length !== 12) {
+    failures.push(`${name} page must lazy-load exactly twelve below-the-fold images`);
+  }
+  if (referencedVariants.size !== 84) {
+    failures.push(`${name} page must reference all 84 optimized media variants`);
   }
 }
 
 try {
   const mediaFiles = (await readdir(path.join(out, "media"))).filter((file) => /\.(?:avif|webp)$/.test(file));
-  if (mediaFiles.length !== 78) {
-    failures.push(`Expected 78 responsive media variants, found ${mediaFiles.length}`);
+  const largeWebpFiles = mediaFiles.filter((file) => /-1280\.webp$/.test(file));
+  if (mediaFiles.length !== 84) {
+    failures.push(`Expected 84 responsive media variants, found ${mediaFiles.length}`);
+  }
+  if (largeWebpFiles.length !== 14) {
+    failures.push(`Expected 14 master WebP images, found ${largeWebpFiles.length}`);
+  }
+  const masterHashes = await Promise.all(
+    largeWebpFiles.map(async (file) =>
+      createHash("sha256")
+        .update(await readFile(path.join(out, "media", file)))
+        .digest("hex"),
+    ),
+  );
+  if (new Set(masterHashes).size !== masterHashes.length) {
+    failures.push("Every content image must have distinct visual source data");
   }
   for (const file of mediaFiles) {
     const mediaStat = await stat(path.join(out, "media", file));

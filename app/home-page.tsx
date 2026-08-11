@@ -49,9 +49,9 @@ const media = {
   strengthArea: { slug: "grappling-garage-strength-area", small: 640, medium: 960, large: 1280, width: 1599, height: 899 },
   strengthTraining: { slug: "strength-conditioning-actors", small: 640, medium: 960, large: 1280, width: 1536, height: 1024 },
   wrestlingTeam: { slug: "wrestling-team-tunis", small: 640, medium: 960, large: 1280, width: 1600, height: 1200 },
-  warmup: { slug: "wrestling-warmup", small: 480, large: 960, width: 1204, height: 1600, position: "center 35%" },
-  takedown: { slug: "wrestling-takedown", small: 480, large: 960, width: 1204, height: 1600, position: "center 42%" },
-  rounds: { slug: "wrestling-rounds", small: 480, large: 899, width: 899, height: 1599, position: "center 38%" },
+  warmup: { slug: "wrestling-warmup", small: 640, medium: 960, large: 1280, width: 1536, height: 1024 },
+  takedown: { slug: "wrestling-takedown", small: 640, medium: 960, large: 1280, width: 1537, height: 1023 },
+  rounds: { slug: "wrestling-rounds", small: 640, medium: 960, large: 1280, width: 1536, height: 1024 },
 } satisfies Record<string, MediaAsset>;
 
 function T({ locale, value, block = false }: { locale: Locale; value: Copy; block?: boolean }) {
@@ -411,7 +411,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="bg-[#08777a] py-14 text-white lg:py-20">
+      <section id="entrainement" className="bg-[#08777a] py-14 text-white lg:py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="copy-align grid gap-6 lg:grid-cols-[1fr_0.55fr] lg:items-end">
             <div>
@@ -424,7 +424,7 @@ export function HomePage({ locale }: { locale: Locale }) {
           <div className="mt-10 grid gap-3 lg:grid-cols-3">
             <PhotoSlot locale={locale} number="03" label={copy("Démonstration du coach", "شرح المدرب", "Coach demonstration")} asset={media.coachDemo} className="min-h-80" />
             <PhotoSlot locale={locale} number="04" label={copy("Travail d’amenée au sol", "تدريب الإسقاط", "Takedown practice")} asset={media.takedown} className="min-h-80 lg:translate-y-8" />
-            <PhotoSlot locale={locale} number="05" label={copy("Technique BJJ au sol", "تقنية الجيوجيتسو الأرضية", "BJJ ground technique")} asset={media.bjjGround} className="min-h-80" />
+            <PhotoSlot locale={locale} number="05" label={copy("Rounds de lutte", "جولات المصارعة", "Wrestling rounds")} asset={media.rounds} className="min-h-80" />
           </div>
 
           <div className="mt-16 grid border-l border-t border-white/30 lg:grid-cols-3">
@@ -476,8 +476,6 @@ export function HomePage({ locale }: { locale: Locale }) {
                 </article>
               ))}
             </div>
-            <PhotoSlot locale={locale} number="07" label={copy("Espace de renforcement", "فضاء تقوية الجسم", "Strength area")} asset={media.strengthArea} className="lg:col-span-7 lg:min-h-72" />
-            <PhotoSlot locale={locale} number="08" label={copy("Rounds de lutte", "جولات المصارعة", "Wrestling rounds")} asset={media.rounds} className="lg:col-span-5 lg:min-h-72" />
           </div>
 
           <div className="copy-align mt-10 flex flex-col gap-5 border-l-4 border-[#d9ff45] bg-[#071923] p-6 text-white sm:p-8 lg:flex-row lg:items-center lg:justify-between">
@@ -523,13 +521,13 @@ export function HomePage({ locale }: { locale: Locale }) {
           </div>
 
           <div className="mt-3 grid gap-3 lg:grid-cols-12">
-            <PhotoSlot locale={locale} number="09" label={copy("Renforcement pour le grappling", "تقوية بدنية للغرابلينغ", "Strength for grappling")} asset={media.strengthTraining} className="lg:col-span-7 lg:min-h-[28rem]" />
-            <PhotoSlot locale={locale} number="10" label={copy("Salle de musculation Grappling Garage", "قاعة تقوية Grappling Garage", "Grappling Garage strength room")} asset={media.strengthArea} className="lg:col-span-5 lg:min-h-[28rem]" />
+            <PhotoSlot locale={locale} number="07" label={copy("Renforcement pour le grappling", "تقوية بدنية للغرابلينغ", "Strength for grappling")} asset={media.strengthTraining} className="lg:col-span-7 lg:min-h-[28rem]" />
+            <PhotoSlot locale={locale} number="08" label={copy("Salle de musculation Grappling Garage", "قاعة تقوية Grappling Garage", "Grappling Garage strength room")} asset={media.strengthArea} className="lg:col-span-5 lg:min-h-[28rem]" />
           </div>
         </div>
       </section>
 
-      <section className="bg-[#071923] py-14 text-white lg:py-20">
+      <section id="galerie" className="bg-[#071923] py-14 text-white lg:py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="copy-align flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-4xl">
@@ -539,16 +537,13 @@ export function HomePage({ locale }: { locale: Locale }) {
             <p className="max-w-sm font-bold leading-7 text-[#c5d4db]"><T locale={locale} block value={copy("Du travail sérieux, une bonne ambiance et des partenaires qui veulent progresser avec toi.", "عمل جدي، أجواء جيدة وشركاء يريدون التقدم معك.", "Serious work, a good atmosphere and training partners who want to improve with you.")} /></p>
           </div>
           <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-12">
-            <PhotoSlot locale={locale} number="11" label={copy("Technique BJJ", "تقنية الجيوجيتسو", "BJJ technique")} asset={media.bjjGround} className="lg:col-span-7 lg:min-h-96" />
-            <PhotoSlot locale={locale} number="12" label={copy("Amenée au sol", "الإسقاط", "Takedown")} asset={media.wrestlingDrill} className="lg:col-span-5 lg:min-h-96" />
-            <PhotoSlot locale={locale} number="13" label={copy("Équipe Grappling Garage", "فريق Grappling Garage", "Grappling Garage team")} asset={media.mainTeam} className="lg:col-span-4" />
-            <PhotoSlot locale={locale} number="14" label={copy("Échauffement en équipe", "إحماء جماعي", "Team warm-up")} asset={media.warmup} className="lg:col-span-4" />
-            <PhotoSlot locale={locale} number="15" label={copy("Après l’entraînement", "بعد التدريب", "After training")} asset={media.wrestlingTeam} className="lg:col-span-4" />
+            <PhotoSlot locale={locale} number="09" label={copy("Échauffement en équipe", "إحماء جماعي", "Team warm-up")} asset={media.warmup} className="lg:col-span-5 lg:min-h-96" />
+            <PhotoSlot locale={locale} number="10" label={copy("Après l’entraînement", "بعد التدريب", "After training")} asset={media.wrestlingTeam} className="lg:col-span-7 lg:min-h-96" />
           </div>
         </div>
       </section>
 
-      <section className="bg-[#f2f7fa] py-14 lg:py-20">
+      <section id="equipe" className="bg-[#f2f7fa] py-14 lg:py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="copy-align grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
             <div>
@@ -559,10 +554,8 @@ export function HomePage({ locale }: { locale: Locale }) {
           </div>
 
           <div className="mt-10 grid gap-3 lg:grid-cols-12">
-            <PhotoSlot locale={locale} number="16" label={copy("Un espace prêt à t’accueillir", "فضاء جاهز لاستقبالك", "A space ready for you")} asset={media.matAngle} className="lg:col-span-4 lg:min-h-80" />
-            <PhotoSlot locale={locale} number="17" label={copy("Partenaires de round", "شركاء الجولة", "Round partners")} asset={media.mainTeam} className="lg:col-span-8 lg:min-h-80" />
-            <PhotoSlot locale={locale} number="18" label={copy("Le coach explique chaque détail", "المدرب يشرح كل تفصيل", "The coach explains every detail")} asset={media.coachDemo} className="lg:col-span-7 lg:min-h-80" />
-            <PhotoSlot locale={locale} number="19" label={copy("Photo d’équipe", "صورة الفريق", "Team photo")} asset={media.wrestlingTeam} className="lg:col-span-5 lg:min-h-80" />
+            <PhotoSlot locale={locale} number="11" label={copy("Partenaires de round", "شركاء الجولة", "Round partners")} asset={media.mainTeam} className="lg:col-span-8 lg:min-h-80" />
+            <PhotoSlot locale={locale} number="12" label={copy("Un espace prêt à t’accueillir", "فضاء جاهز لاستقبالك", "A space ready for you")} asset={media.matAngle} className="lg:col-span-4 lg:min-h-80" />
           </div>
 
           <div className="mt-10 grid border-l border-t border-[#9fb3bd] md:grid-cols-3">
@@ -627,14 +620,14 @@ export function HomePage({ locale }: { locale: Locale }) {
             <p className="text-sm font-black uppercase text-[#08777a]"><T locale={locale} value={copy("Enfants 5 à 15 ans", "أطفال من 5 إلى 15 سنة", "Children aged 5 to 15")} /></p>
             <h2 className="mt-3 text-4xl font-black sm:text-5xl"><T locale={locale} block value={copy("De l’énergie, mais avec du contrôle", "طاقة مع تحكم", "Energy with control")} /></h2>
             <p className="mt-5 font-semibold leading-7 text-[#385463]"><T locale={locale} block value={copy("Des groupes adaptés à leur âge pour développer coordination, écoute, confiance et respect. Ils bougent, apprennent et rentrent fiers de ce qu’ils savent faire.", "مجموعات حسب العمر لتطوير التنسيق والإصغاء والثقة والاحترام. يتحركون ويتعلمون ويعودون فخورين بما أنجزوه.", "Age-based groups that build coordination, listening, confidence and respect. They move, learn and go home proud of what they can do.")} /></p>
-            <PhotoSlot locale={locale} number="20" label={copy("Cours enfants encadré", "حصة أطفال تحت الإشراف", "Supervised kids class")} asset={media.kidsClass} className="mt-8 min-h-80" />
+            <PhotoSlot locale={locale} number="13" label={copy("Cours enfants encadré", "حصة أطفال تحت الإشراف", "Supervised kids class")} asset={media.kidsClass} className="mt-8 min-h-80" />
           </div>
           <div className="copy-align border-l-4 border-[#08777a] pl-6">
             <p className="text-sm font-black uppercase text-[#08777a]"><T locale={locale} value={copy("Hay Rafaha, Tunis", "حي الرفاهة، تونس", "Hay Rafaha, Tunis")} /></p>
             <h2 className="mt-3 text-4xl font-black sm:text-5xl"><T locale={locale} block value={copy("Un vrai club. Une vraie équipe. À Tunis.", "ناد حقيقي. فريق حقيقي. في تونس.", "A real club. A real team. In Tunis.")} /></h2>
             <a href={mapsHref} target="_blank" rel="noopener noreferrer" className="mt-5 block font-semibold leading-7 text-[#385463] underline decoration-[#d9ff45] decoration-4 underline-offset-4">{address.display}</a>
             <a href={phoneHref} className="mt-5 inline-block text-xl font-black underline decoration-[#d9ff45] decoration-4 underline-offset-4">{phoneDisplay}</a>
-            <PhotoSlot locale={locale} number="21" label={copy("Le tapis à Hay Rafaha", "بساط النادي في حي الرفاهة", "The mat in Hay Rafaha")} asset={media.mat} className="mt-8 min-h-80" />
+            <PhotoSlot locale={locale} number="14" label={copy("Le tapis à Hay Rafaha", "بساط النادي في حي الرفاهة", "The mat in Hay Rafaha")} asset={media.mat} className="mt-8 min-h-80" />
           </div>
         </div>
       </section>
