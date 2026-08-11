@@ -68,6 +68,10 @@ requireText(
   llms,
   "Grappling Garage does not offer MMA classes",
 );
+requireText("French page is missing the strength-room section", index, "Salle de musculation sur place");
+requireText("Arabic page is missing the strength-room section", arabic, "قاعة تقوية بدنية داخل النادي");
+requireText("English page is missing the strength-room section", english, "On-site strength room");
+requireText("llms.txt is missing the strength-room resource", llms, `${expectedDomain}/#musculation`);
 
 for (const [name, page] of [["French", index], ["Arabic", arabic], ["English", english]]) {
   requireMatch(`${name} page is not explicitly indexable`, page, /<meta name="robots" content="index, follow"/);
@@ -118,10 +122,16 @@ requireText("Responsive WebP media is missing", index, 'type="image/webp"');
 requireText("First-viewport media priority is missing", index, 'fetchPriority="high"');
 requireText("Below-the-fold media lazy loading is missing", index, 'loading="lazy"');
 
+for (const [name, page] of [["French", index], ["Arabic", arabic], ["English", english]]) {
+  if ((page.match(/<picture>/g) || []).length !== 21) {
+    failures.push(`${name} page must contain exactly 21 relevant responsive pictures`);
+  }
+}
+
 try {
   const mediaFiles = (await readdir(path.join(out, "media"))).filter((file) => /\.(?:avif|webp)$/.test(file));
-  if (mediaFiles.length !== 72) {
-    failures.push(`Expected 72 responsive media variants, found ${mediaFiles.length}`);
+  if (mediaFiles.length !== 78) {
+    failures.push(`Expected 78 responsive media variants, found ${mediaFiles.length}`);
   }
   for (const file of mediaFiles) {
     const mediaStat = await stat(path.join(out, "media", file));

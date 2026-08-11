@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { days, getCategory, sortAgenda, starterAgenda } from "./schedule-data";
 
 const scheduleEndpoint =
@@ -101,8 +101,34 @@ function localizeClassName(className, locale) {
 export function AgendaDisplay({ locale = "fr" }) {
   const [agenda, setAgenda] = useState(starterAgenda);
   const [error, setError] = useState(false);
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
+    const container = containerRef.current;
+
+    if (!container || typeof IntersectionObserver === "undefined") {
+      setShouldRefresh(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldRefresh(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "800px 0px" },
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldRefresh) return undefined;
+
     const controller = new AbortController();
 
     fetch(scheduleEndpoint, { signal: controller.signal })
@@ -119,7 +145,7 @@ export function AgendaDisplay({ locale = "fr" }) {
       });
 
     return () => controller.abort();
-  }, []);
+  }, [shouldRefresh]);
 
   const orderedAgenda = useMemo(() => sortAgenda(agenda), [agenda]);
   const agendaByDay = useMemo(
@@ -134,7 +160,7 @@ export function AgendaDisplay({ locale = "fr" }) {
   );
 
   return (
-    <>
+    <div ref={containerRef}>
       {error && (
         <p className="mb-4 text-sm font-bold text-[#c8e4f2]" aria-live="polite">
           {interfaceCopy[locale].error}
@@ -175,6 +201,6 @@ export function AgendaDisplay({ locale = "fr" }) {
           </section>
         ))}
       </div>
-    </>
+    </div>
   );
 }
