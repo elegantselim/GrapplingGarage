@@ -13,10 +13,10 @@ export function BrandLogo({
 }: BrandLogoProps) {
   return (
     <Image
-      src="/grappling-garage-logo.png"
+      src="/grappling-garage-logo-128.png"
       alt="Grappling Garage"
-      width={715}
-      height={789}
+      width={128}
+      height={141}
       sizes="96px"
       priority={priority}
       className={`${className} ${inverted ? "brightness-0 invert" : ""}`}

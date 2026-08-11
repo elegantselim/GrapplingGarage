@@ -1,4 +1,4 @@
-import { readFile, stat } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
@@ -102,6 +102,7 @@ requireText("HTTPS redirect is missing from .htaccess", htaccess, "RewriteCond %
 requireText("HSTS is missing from .htaccess", htaccess, "Strict-Transport-Security");
 requireText("Content Security Policy is missing from .htaccess", htaccess, "Content-Security-Policy");
 requireText("CSP does not upgrade insecure requests", htaccess, "upgrade-insecure-requests");
+requireText("Long-lived immutable asset caching is missing", htaccess, "max-age=31536000, immutable");
 requireText(
   "Exact Grappling Garage address is missing",
   index,
@@ -112,6 +113,25 @@ requireText(
   index,
   "https://www.google.com/maps/dir/?api=1&amp;destination=Grappling%20Garage%2C%20Hay%20Rafaha",
 );
+requireText("Responsive AVIF media is missing", index, 'type="image/avif"');
+requireText("Responsive WebP media is missing", index, 'type="image/webp"');
+requireText("First-viewport media priority is missing", index, 'fetchPriority="high"');
+requireText("Below-the-fold media lazy loading is missing", index, 'loading="lazy"');
+
+try {
+  const mediaFiles = (await readdir(path.join(out, "media"))).filter((file) => /\.(?:avif|webp)$/.test(file));
+  if (mediaFiles.length !== 72) {
+    failures.push(`Expected 72 responsive media variants, found ${mediaFiles.length}`);
+  }
+  for (const file of mediaFiles) {
+    const mediaStat = await stat(path.join(out, "media", file));
+    if (mediaStat.size > 100 * 1024) {
+      failures.push(`${file} exceeds the 100 KB media budget`);
+    }
+  }
+} catch {
+  failures.push("Responsive media directory is missing");
+}
 
 if ([index, arabic, english].some((page) => /\b(?:src|href)=["']http:\/\//i.test(page) || /\bws:\/\//i.test(page))) {
   failures.push("A localized homepage export contains an insecure resource URL");
